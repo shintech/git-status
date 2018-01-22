@@ -1,8 +1,8 @@
-var path = require('path')
-var dir = process.argv[2]
-var _package = path.join(dir, 'package.json')
-var config = path.join(dir, 'version.yml')
-var fs = require('fs')
+const path = require('path')
+const dir = process.argv[2]
+const _package = path.join(dir, 'package.json')
+const config = path.join(dir, 'version.yml')
+const fs = require('fs')
 const logger = require('winston-color')
 const chalk = require('chalk')
 const yaml = require('js-yaml')
