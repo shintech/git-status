@@ -1,26 +1,34 @@
-const path = require('path')
-const dir = process.argv[2]
-const _package = path.join(dir, 'package.json')
-const config = path.join(dir, 'version.yml')
 const fs = require('fs')
+const path = require('path')
 const logger = require('winston-color')
 const chalk = require('chalk')
 const yaml = require('js-yaml')
+const { promisify } = require('util')
+
+const PWD = process.cwd()
+const _package = path.join(PWD, 'package.json')
+const config = path.join(PWD, 'version.yml')
+
+const stat = promisify(fs.stat)
 
 checkForPkg()
 
-function checkForPkg () {
-  fs.stat(_package, (err, res) => {
-    if (err && err.path === _package) {
-      checkForYaml()
-      return
-    } else if (err) {
-      throw new Error(err)
-    }
+async function checkForPkg () {
+  let result
 
+  try {
+    await stat(_package)
+    result = true
+  } catch (err) {
+    result = false
+  }
+
+  if (result) {
     const pkg = require(_package)
     info(pkg.name, pkg.version)
-  })
+  } else {
+    checkForYaml()
+  }
 }
 
 function checkForYaml () {
